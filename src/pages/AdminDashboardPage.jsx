@@ -12,15 +12,24 @@ const AdminDashboardPage = () => {
   const minutes = new Date().getMinutes();
   const hour = new Date().getHours();
   const { dispatch } = useContext(GlobalContext);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   useEffect(() => {
     let sdk = new MkdSDK();
 
     showToast(dispatch, "Logged in successfully");
-    sdk.callRestAPI({ payload: "", method: "GET" });
-  }, [dispatch]);
+    sdk.callRestAPI({ payload: { page, limit }, method: "GET" });
+  }, [dispatch, limit, page]);
 
-  const paginate = () => {};
+  const paginate = (type) => {
+    if (type === "prev") {
+      setPage(page - 1);
+    }
+    if (type === "next") {
+      setPage(page + 1);
+    }
+  };
 
   const staticData = {
     title: "Rune raises $100,000 for marketing through NFT butterflies sale",
@@ -99,7 +108,7 @@ const AdminDashboardPage = () => {
                 </div>
               </div>
             </div>
-            <span className="flex items-center">ninja</span>
+            <span className="flex items-center text-[#DBFD51]">ninja</span>
             <span className="flex items-center">234</span>
           </div>
         </div>
@@ -109,13 +118,13 @@ const AdminDashboardPage = () => {
         <div className="flex gap-3 my-8">
           <button
             className="border-0 text-[14px] bg-[#9BFF00] hover:bg-[#12FF00] w-[128px] h-[48px] px-[12px] py-[12px] rounded-[40px]"
-            onClick={() => paginate()}
+            onClick={() => paginate("prev")}
           >
             previous page
           </button>
           <button
             className="border-0 text-[14px] bg-[#9BFF00] hover:bg-[#12FF00] w-[128px] h-[48px] px-[12px] py-[12px] rounded-[40px]"
-            onClick={() => paginate()}
+            onClick={() => paginate("next")}
           >
             next page
           </button>
