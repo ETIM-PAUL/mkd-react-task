@@ -16,7 +16,7 @@ export default function MkdSDK() {
   
   this.login = async function (email, password, role) {
     try {
-      const response = await axios.post("https://reacttask.mkdlabs.com/v2/api/lambda/login",
+      const response = await axios.post(this._baseurl + "/v2/api/lambda/login",
       {
         email: email,
         password: password,
@@ -24,6 +24,7 @@ export default function MkdSDK() {
       },
       {
        headers: { 
+        "X-Project":"cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ",
          "Content-Type": "application/json",
        }
       })
@@ -110,7 +111,26 @@ export default function MkdSDK() {
   };  
 
   this.check = async function (role) {
-    //TODO
+    const token = localStorage.getItem('token');
+    try {
+      const response = await axios.post(this._baseurl + "/v2/api/lambda/check",
+      {
+        role: role
+      },
+      {
+       headers: { 
+        Authorization: "Bearer " + token,
+        "X-Project":"cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ",
+       }
+      })
+   
+     if(response.status === 200){
+      return "Token still valid.";
+     }  else return "Token not valid.";
+    } catch (error) {
+      console.log(error)
+    }
+
   };
 
   return this;
