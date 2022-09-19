@@ -16,11 +16,15 @@ const AdminDashboardPage = () => {
   const [page, setPage] = useState(1);
   const [showPrev, setShowPrev] = useState(false);
   const [showNext, setShowNext] = useState(true);
-  const [limit, setLimit] = useState(10);
+  const limit = 10;
+
+  const da = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   useEffect(() => {
     let sdk = new MkdSDK();
-    sdk.callRestAPI({ payload: { page, limit }, method: "GET" });
+    sdk
+      .callRestAPI({ payload: { page, limit }, method: "GET" })
+      .then((response) => {});
   }, [dispatch, limit, page]);
 
   const paginate = (type) => {
@@ -61,14 +65,17 @@ const AdminDashboardPage = () => {
   };
   return (
     <>
+      {/* Toast Log In */}
       <SnackBar />
-      <div className="w-full h-screen text-gray-700 px-10 bg-black">
+
+      {/* Page Top Navigation */}
+      <div className="w-screen h-full text-gray-700 px-10 bg-black">
         <div className="flex justify-between py-8 items-center">
           <span className="font-black text-[48px] text-white leading-5 rounded-[50%] ">
             APP
           </span>
           <button
-            className="border-0 text-[10px] bg-[#9BFF00] w-[128px] h-[48px] px-[24px] py-[12px] rounded-[40px]"
+            className="border-0 text-[10px] bg-[#9BFF00] w-[128px] h-[38px] px-[24px] py-[12px] rounded-[40px]"
             onClick={() => logout()}
           >
             <span>Logout</span>
@@ -109,36 +116,47 @@ const AdminDashboardPage = () => {
           </div>
 
           {/* Table Body */}
-          <div className="grid grid-cols-tableGridBody text-[#696969] uppercase text-[13px] font-sans border border-[#696969] rounded-[10px] my-4">
-            <div className="gap-4 flex items-center px-7 ">
-              <div className="text-[#fff] py-1 w-4 pr-2">
-                <span>01</span>
-              </div>
+          {da.map((d) => (
+            <div className="grid grid-cols-tableGridBody text-[#696969] uppercase text-[13px] font-sans border border-[#696969] rounded-[10px] my-4">
+              <div className="gap-4 flex items-center px-7 ">
+                <div className="text-[#fff] py-1 w-4 pr-2">
+                  <span>01</span>
+                </div>
 
-              <div className="hover:text-[#fff] cursor-default flex gap-4 items-center">
-                <img
-                  src={child}
-                  alt="track"
-                  className="my-3 rounded-[8px] h-[70px] w-[180px]"
-                />
-                <div className="grid ">
-                  <span className=" text-[15px] normal-case font-sans">
-                    {staticData.title}
-                  </span>
+                <div className="hover:text-[#fff] cursor-default flex gap-4 items-center">
+                  <img
+                    src={child}
+                    alt="track"
+                    className="my-3 rounded-[8px] h-[70px] w-[180px]"
+                  />
+                  <div className="grid ">
+                    <span className=" text-[15px] normal-case font-sans">
+                      {staticData.title}
+                    </span>
+                  </div>
                 </div>
               </div>
+              <div className="flex items-center gap-3">
+                <img
+                  src={child}
+                  className="w-[20px] h-[20px] rounded-[50%]"
+                  alt=""
+                />
+                <span className="flex items-center text-[#DBFD51] lowercase">
+                  ninja
+                </span>
+              </div>
+              <span className="flex items-center">234</span>
             </div>
-            <span className="flex items-center text-[#DBFD51]">ninja</span>
-            <span className="flex items-center">234</span>
-          </div>
+          ))}
         </div>
 
         {/* Page Controller */}
 
-        <div className="flex gap-3 my-8">
+        <div className="flex gap-3 py-8 items-center">
           {showPrev && (
             <button
-              className="border-0 text-[14px] bg-[#9BFF00] hover:bg-[#12FF00] w-[128px] h-[48px] px-[12px] py-[12px] rounded-[40px]"
+              className="border-0 text-[14px] bg-[#9BFF00] hover:bg-[#12FF00] w-[128px] h-[38px] px-[12px] py-[12px] rounded-[40px] flex items-center justify-center"
               onClick={() => paginate("prev")}
             >
               previous page
@@ -146,7 +164,7 @@ const AdminDashboardPage = () => {
           )}
           {showNext && (
             <button
-              className="border-0 text-[14px] bg-[#9BFF00] hover:bg-[#12FF00] w-[128px] h-[48px] px-[12px] py-[12px] rounded-[40px]"
+              className="border-0 text-[14px] bg-[#9BFF00] hover:bg-[#12FF00] w-[128px] h-[38px] px-[12px] py-[12px] rounded-[40px] flex items-center justify-center"
               onClick={() => paginate("next")}
             >
               next page
