@@ -13,37 +13,35 @@ export default function MkdSDK() {
   this.setTable = function (table) {
     this._table = table;
   };
-  
-  this.login = async function (email, password, role) {
+
+  this.login = async function (payload) {
+    const secret_key =
+      "cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ";
+    const body = {
+      email: payload.email,
+      password: payload.password,
+      role: payload.role,
+    };
     try {
-      const response = await axios.post(this._baseurl + "/v2/api/lambda/login",
-      {
-        email: email,
-        password: password,
-        role: role
-      },
-      {
-       headers: { 
-        "X-Project":"cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ",
-         "Content-Type": "application/json",
-       }
-      })
-   
-      const data = await response.data.json();
-   
-      localStorage.setItem("token", data.token)
-      localStorage.setItem("role", data.role)
-      localStorage.setItem("user_id", data.user_id)
-      localStorage.setItem("expires_at", data.expire_at)
-      
+      const response = await axios.post(
+        this._baseurl + "/v2/api/lambda/login",
+        { data: body },
+        {
+          headers: {
+            "x-project": secret_key,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   this.getHeader = function () {
     return {
-      Authorization: "Bearer " + localStorage.getItem("token"),
+      authorization: "Bearer " + localStorage.getItem("token"),
       "x-project": base64Encode,
     };
   };
@@ -51,7 +49,7 @@ export default function MkdSDK() {
   this.baseUrl = function () {
     return this._baseurl;
   };
-  
+
   this.callRestAPI = async function (payload, method) {
     const header = {
       "Content-Type": "application/json",
@@ -79,7 +77,7 @@ export default function MkdSDK() {
           throw new Error(jsonGet.message);
         }
         return jsonGet;
-      
+
       case "PAGINATE":
         if (!payload.page) {
           payload.page = 1;
@@ -108,29 +106,31 @@ export default function MkdSDK() {
       default:
         break;
     }
-  };  
+  };
 
   this.check = async function (role) {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     try {
-      const response = await axios.post(this._baseurl + "/v2/api/lambda/check",
-      {
-        role: role
-      },
-      {
-       headers: { 
-        Authorization: "Bearer " + token,
-        "X-Project":"cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ",
-       }
-      })
-   
-     if(response.status === 200){
-      return "Token still valid.";
-     }  else return "Token not valid.";
-    } catch (error) {
-      console.log(error)
-    }
+      const response = await axios.post(
+        this._baseurl + "/v2/api/lambda/check",
+        {
+          role: role,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            "X-Project":
+              "cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ",
+          },
+        }
+      );
 
+      if (response.status === 200) {
+        return "Token still valid.";
+      } else return "Token not valid.";
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return this;
