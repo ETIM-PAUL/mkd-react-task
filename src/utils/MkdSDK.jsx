@@ -14,18 +14,17 @@ export default function MkdSDK() {
     this._table = table;
   };
 
+  const secret_key =
+    "cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ";
   this.login = async function (payload) {
-    const secret_key =
-      "cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ";
-    const body = {
-      email: payload.email,
-      password: payload.password,
-      role: payload.role,
-    };
     try {
       const response = await axios.post(
         this._baseurl + "/v2/api/lambda/login",
-        { data: body },
+        {
+          email: payload.email,
+          password: payload.password,
+          role: payload.role,
+        },
         {
           headers: {
             "x-project": secret_key,
@@ -119,15 +118,12 @@ export default function MkdSDK() {
         {
           headers: {
             Authorization: "Bearer " + token,
-            "X-Project":
-              "cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ",
+            "x-project": secret_key,
           },
         }
       );
 
-      if (response.status === 200) {
-        return "Token still valid.";
-      } else return "Token not valid.";
+      return response;
     } catch (error) {
       console.log(error);
     }

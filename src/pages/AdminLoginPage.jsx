@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -14,8 +14,8 @@ const AdminLoginPage = () => {
     })
     .required();
 
-    const { dispatch } = useContext(AuthContext);
-    // const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext);
+  // const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -29,13 +29,15 @@ const AdminLoginPage = () => {
     let sdk = new MkdSDK();
     const payload = {
       email: data.email,
-      password: data.password, 
-      role:"admin" 
-    }
-      sdk.login(payload).then((response) => {
-        dispatch({
-          type: "LOGIN", payload: response})
-       })
+      password: data.password,
+      role: "admin",
+    };
+    sdk.login(payload).then((response) => {
+      dispatch({
+        type: "LOGIN",
+        payload: response,
+      });
+    });
   };
 
   return (
