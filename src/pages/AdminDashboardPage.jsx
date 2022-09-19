@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../authContext";
 import child from "../child.jpeg";
 import SnackBar from "../components/SnackBar";
 import { GlobalContext, showToast } from "../globalContext";
@@ -11,24 +12,40 @@ const AdminDashboardPage = () => {
   const year = new Date().getFullYear();
   const minutes = new Date().getMinutes();
   const hour = new Date().getHours();
-  const { dispatch } = useContext(GlobalContext);
+  const { dispatch } = useContext(AuthContext);
   const [page, setPage] = useState(1);
+  const [showPrev, setShowPrev] = useState(false);
+  const [showNext, setShowNext] = useState(true);
   const [limit, setLimit] = useState(10);
 
   useEffect(() => {
     let sdk = new MkdSDK();
-
-    showToast(dispatch, "Logged in successfully");
     sdk.callRestAPI({ payload: { page, limit }, method: "GET" });
   }, [dispatch, limit, page]);
 
   const paginate = (type) => {
     if (type === "prev") {
       setPage(page - 1);
+      if (page - 1 < 10) {
+        setShowNext(true);
+      }
+      if (page - 1 === 1) {
+        setShowPrev(false);
+      }
     }
     if (type === "next") {
       setPage(page + 1);
+      if (page + 1 > 1) {
+        setShowPrev(true);
+      }
+      if (page + 1 === 10) {
+        setShowNext(false);
+      }
     }
+  };
+
+  const logout = () => {
+    dispatch({ type: "LOGOUT" });
   };
 
   const staticData = {
@@ -50,7 +67,10 @@ const AdminDashboardPage = () => {
           <span className="font-black text-[48px] text-white leading-5 rounded-[50%] ">
             APP
           </span>
-          <button className="border-0 text-[10px] bg-[#9BFF00] w-[128px] h-[48px] px-[24px] py-[12px] rounded-[40px]">
+          <button
+            className="border-0 text-[10px] bg-[#9BFF00] w-[128px] h-[48px] px-[24px] py-[12px] rounded-[40px]"
+            onClick={() => logout()}
+          >
             <span>Logout</span>
           </button>
         </div>
@@ -116,18 +136,22 @@ const AdminDashboardPage = () => {
         {/* Page Controller */}
 
         <div className="flex gap-3 my-8">
-          <button
-            className="border-0 text-[14px] bg-[#9BFF00] hover:bg-[#12FF00] w-[128px] h-[48px] px-[12px] py-[12px] rounded-[40px]"
-            onClick={() => paginate("prev")}
-          >
-            previous page
-          </button>
-          <button
-            className="border-0 text-[14px] bg-[#9BFF00] hover:bg-[#12FF00] w-[128px] h-[48px] px-[12px] py-[12px] rounded-[40px]"
-            onClick={() => paginate("next")}
-          >
-            next page
-          </button>
+          {showPrev && (
+            <button
+              className="border-0 text-[14px] bg-[#9BFF00] hover:bg-[#12FF00] w-[128px] h-[48px] px-[12px] py-[12px] rounded-[40px]"
+              onClick={() => paginate("prev")}
+            >
+              previous page
+            </button>
+          )}
+          {showNext && (
+            <button
+              className="border-0 text-[14px] bg-[#9BFF00] hover:bg-[#12FF00] w-[128px] h-[48px] px-[12px] py-[12px] rounded-[40px]"
+              onClick={() => paginate("next")}
+            >
+              next page
+            </button>
+          )}
         </div>
       </div>
     </>

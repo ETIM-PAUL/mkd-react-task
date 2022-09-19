@@ -1,8 +1,11 @@
-import React from "react";
-import { GlobalContext } from "../globalContext";
+import React, { useEffect } from "react";
+import { GlobalContext, showToast } from "../globalContext";
 const SnackBar = () => {
   const { state, dispatch } = React.useContext(GlobalContext);
   const show = state.globalMessage.length > 0;
+  useEffect(() => {
+    showToast(dispatch, "Logged in successfully");
+  }, [dispatch]);
   return show ? (
     <div
       id="mkd-toast"
