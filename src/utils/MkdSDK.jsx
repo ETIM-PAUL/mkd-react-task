@@ -3,9 +3,12 @@ import axios from "axios";
 export default function MkdSDK() {
   this._baseurl = "https://reacttask.mkdlabs.com";
   this._project_id = "reacttask";
+  this._secret = "5fchxn5m8hbo6jcxiq3xddofodoacskye";
   this._table = "";
   this._custom = "";
   this._method = "";
+  const secret_key =
+    "cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ==";
 
   const raw = this._project_id + ":" + this._secret;
   let base64Encode = btoa(raw);
@@ -14,8 +17,6 @@ export default function MkdSDK() {
     this._table = table;
   };
 
-  const secret_key =
-    "cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ";
   this.login = async function (payload) {
     try {
       const response = await axios.post(
@@ -49,21 +50,29 @@ export default function MkdSDK() {
     return this._baseurl;
   };
 
-  this.callRestAPI = async function (payload, method) {
+  this.callRestAPI = async function ({ payload, method }) {
     const header = {
       "Content-Type": "application/json",
-      "x-project": base64Encode,
+      "x-project": this.secret_key,
       Authorization: "Bearer " + localStorage.getItem("token"),
     };
-
     switch (method) {
       case "GET":
-        const getResult = await fetch(
-          this._baseurl + `/v1/api/rest/${this._table}/GET`,
+        const getResult = await axios.post(
+          `https://reacttask.mkdlabs.com/v1/api/rest/video/PAGINATE`,
           {
-            method: "post",
-            headers: header,
-            body: JSON.stringify(payload),
+            payload: {},
+            page: payload.page,
+            limit: payload.limit,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+
+              "x-project":
+                "cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ==",
+              "Content-Type": "application/json",
+            },
           }
         );
         const jsonGet = await getResult.json();
@@ -75,6 +84,7 @@ export default function MkdSDK() {
         if (getResult.status === 403) {
           throw new Error(jsonGet.message);
         }
+        console.log(jsonGet);
         return jsonGet;
 
       case "PAGINATE":
@@ -109,24 +119,20 @@ export default function MkdSDK() {
 
   this.check = async function (role) {
     const token = localStorage.getItem("token");
-    try {
-      const response = await axios.post(
-        this._baseurl + "/v2/api/lambda/check",
-        {
-          role: role,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-            "x-project": secret_key,
-          },
-        }
-      );
 
-      return response;
-    } catch (error) {
-      console.log(error);
-    }
+    const response = await axios.post(
+      this._baseurl + "/v2/api/lambda/check",
+      {
+        role: "admin",
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+          "x-project": secret_key,
+        },
+      }
+    );
+    return response.data.message;
   };
 
   return this;
