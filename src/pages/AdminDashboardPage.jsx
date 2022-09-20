@@ -6,6 +6,7 @@ import update from "immutability-helper";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Video from "../components/Video";
+import arrowDown from "../assets/arrow-down.svg";
 
 const AdminDashboardPage = () => {
   const [fetchedData, setFetchedData] = useState([]);
@@ -118,7 +119,7 @@ const AdminDashboardPage = () => {
               <button className="uppercase border-0 text-[10px] bg-[#9BFF00] w-[136px] h-[17px] px-2 py-1 rounded-[40px] flex items-center justify-center">
                 submissions open
               </button>
-              <span className="pb-2 text-[#1D1D1D]">.</span>
+              <span className="pb-2 text-white">.</span>
               <div className="flex space-x-1 text-white">
                 <span>{currentTime()}</span>
               </div>
@@ -137,7 +138,7 @@ const AdminDashboardPage = () => {
             <span className=" cursor-default">author</span>
             <div className="flex items-center gap-1">
               <span className=" cursor-default capitalized">most liked</span>
-              <div className="arrow down mb-1"></div>
+              <img src={arrowDown} alt="" className=" w-4 h-3" />
             </div>
           </div>
 

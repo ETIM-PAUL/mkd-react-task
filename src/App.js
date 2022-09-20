@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import { AuthContext } from "./authContext";
+import { Routes, Route } from "react-router-dom";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   const [userToken, setUserToken] = useState(null);
@@ -14,7 +16,17 @@ function App() {
   }, [token]);
 
   return (
-    <div>{token === null ? <AdminLoginPage /> : <AdminDashboardPage />}</div>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <div>
+            {userToken === null ? <AdminLoginPage /> : <AdminDashboardPage />}
+          </div>
+        }
+      />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 }
 

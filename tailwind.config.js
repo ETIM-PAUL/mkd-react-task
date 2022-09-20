@@ -4,8 +4,8 @@ module.exports = {
   theme: {
     extend: {
       gridTemplateColumns: {
-        tableGridBody: "1.4fr 0.9fr 0.15fr",
-        tableGridHead: "1.4fr 0.9fr 0.15fr",
+        tableGridBody: "1.4fr 1fr 0.3fr",
+        tableGridHead: "1.4fr 1fr 0.3fr",
       },
     },
   },
