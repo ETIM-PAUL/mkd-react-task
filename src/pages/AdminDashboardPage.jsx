@@ -1,9 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../authContext";
-import child from "../child.jpeg";
 import SnackBar from "../components/SnackBar";
-import { GlobalContext, showToast } from "../globalContext";
 import MkdSDK from "../utils/MkdSDK";
+import update from "immutability-helper";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import Video from "../components/Video";
 
 const AdminDashboardPage = () => {
   const [fetchedData, setFetchedData] = useState([]);
@@ -18,13 +20,24 @@ const AdminDashboardPage = () => {
   const [showNext, setShowNext] = useState(true);
   const limit = 10;
 
-  const da = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [da, setDa] = useState([
+    { name: "ninjanft" },
+    { name: "deniscrypto" },
+    { name: "meta_world98" },
+    { name: "kingdom43world" },
+    { name: "sjkj3987423kjbdfsf" },
+    { name: "coleworld" },
+    { name: "bastiliy" },
+    { name: "Interic" },
+    { name: "christianna" },
+    { name: "legion" },
+  ]);
 
   useEffect(() => {
     let sdk = new MkdSDK();
-    sdk
-      .callRestAPI({ payload: { page, limit }, method: "GET" })
-      .then((response) => {});
+    // sdk
+    //   .callRestAPI({ payload: { page, limit }, method: "GET" })
+    //   .then((response) => {});
   }, [dispatch, limit, page]);
 
   const paginate = (type) => {
@@ -52,17 +65,27 @@ const AdminDashboardPage = () => {
     dispatch({ type: "LOGOUT" });
   };
 
-  const staticData = {
-    title: "Rune raises $100,000 for marketing through NFT butterflies sale",
-    author: "ninjanft",
-  };
-
   const currentTime = () => {
     return hour + ":" + minutes;
   };
   const currentDate = () => {
     return day + " " + month.toString("en-us") + " " + year;
   };
+
+  const moveCard = useCallback(
+    (dragIndex, hoverIndex) => {
+      const dragCard = da[dragIndex];
+      setDa(
+        update(da, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragCard],
+          ],
+        })
+      );
+    },
+    [da]
+  );
   return (
     <>
       {/* Toast Log In */}
@@ -71,11 +94,11 @@ const AdminDashboardPage = () => {
       {/* Page Top Navigation */}
       <div className="w-screen h-full text-gray-700 px-10 bg-black">
         <div className="flex justify-between py-8 items-center">
-          <span className="font-black text-[48px] text-white leading-5 rounded-[50%] ">
+          <span className="font-black text-[48px] text-white leading-5 rounded-[50%]">
             APP
           </span>
           <button
-            className="border-0 text-[10px] bg-[#9BFF00] w-[128px] h-[38px] px-[24px] py-[12px] rounded-[40px]"
+            className="border-0 text-[10px] bg-[#9BFF00] w-[128px] h-[38px] px-6 py-3 rounded-[40px]"
             onClick={() => logout()}
           >
             <span>Logout</span>
@@ -84,7 +107,7 @@ const AdminDashboardPage = () => {
 
         <div className="mt-6 md:mt-20 mb-4 block relative">
           <div className="flex justify-between items-center">
-            <span className="leading-[48px] text-[40px] text-white font-[100]">
+            <span className="leading-10 text-[40px] text-white font-[100]">
               Today's leaderboard
             </span>
             <div className="flex justify-center items-center gap-2 bg-[#1D1D1D] px-4 py-2 rounded-[10px]">
@@ -112,43 +135,23 @@ const AdminDashboardPage = () => {
               <span className=" cursor-default">title</span>
             </div>
             <span className=" cursor-default">author</span>
-            <span className=" cursor-default capitalized">most liked</span>
+            <div className="flex items-center gap-1">
+              <span className=" cursor-default capitalized">most liked</span>
+              <div className="arrow down mb-1"></div>
+            </div>
           </div>
 
           {/* Table Body */}
-          {da.map((d) => (
-            <div className="grid grid-cols-tableGridBody text-[#696969] uppercase text-[13px] font-sans border border-[#696969] rounded-[10px] my-4">
-              <div className="gap-4 flex items-center px-7 ">
-                <div className="text-[#fff] py-1 w-4 pr-2">
-                  <span>01</span>
-                </div>
-
-                <div className="hover:text-[#fff] cursor-default flex gap-4 items-center">
-                  <img
-                    src={child}
-                    alt="track"
-                    className="my-3 rounded-[8px] h-[70px] w-[180px]"
-                  />
-                  <div className="grid ">
-                    <span className=" text-[15px] normal-case font-sans">
-                      {staticData.title}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <img
-                  src={child}
-                  className="w-[20px] h-[20px] rounded-[50%]"
-                  alt=""
-                />
-                <span className="flex items-center text-[#DBFD51] lowercase">
-                  ninja
-                </span>
-              </div>
-              <span className="flex items-center">234</span>
-            </div>
-          ))}
+          <DndProvider backend={HTML5Backend}>
+            {da.map(({ name }, index) => (
+              <Video
+                key={index}
+                index={index}
+                moveCard={moveCard}
+                name={name}
+              />
+            ))}
+          </DndProvider>
         </div>
 
         {/* Page Controller */}
