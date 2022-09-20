@@ -37,7 +37,7 @@ const Video = ({ index, moveCard, name }) => {
         className={isOver ? "border-[#DBFD51] border" : "border-[transparent] "}
       />
       <div
-        className="grid grid-cols-tableGridBody text-[#696969] uppercase text-sm font-sans border border-[#696969] rounded-[10px] my-4 hover:cursor-move"
+        className="grid grid-cols-tableGridBody text-[#696969] uppercase text-sm font-sans border border-[#696969] rounded-[10px] my-4 hover:cursor-move py-3"
         key={index}
         ref={ref}
       >
@@ -50,7 +50,7 @@ const Video = ({ index, moveCard, name }) => {
             <img
               src={child}
               alt="track"
-              className="my-3 rounded-2 h-[70px] w-44"
+              className="rounded-[8px] h-[70px] w-44 hidden sm:block"
             />
             <div className="grid ">
               <span className=" text-4 normal-case font-sans">
@@ -60,12 +60,16 @@ const Video = ({ index, moveCard, name }) => {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <img src={child} className="w-5 h-5 rounded-[50%]" alt="" />
-          <span className="flex items-center text-[#DBFD51] lowercase">
+          <img
+            src={child}
+            className="w-5 h-5 rounded-[50%] hidden sm:block"
+            alt=""
+          />
+          <span className="flex items-center text-[#DBFD51] lowercase truncate ">
             {name}
           </span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 pr-4 sm:pr-0">
           <span className="flex items-center text-white">234</span>
           <img src={arrowUp} alt="" className=" w-4 h-3" />
         </div>

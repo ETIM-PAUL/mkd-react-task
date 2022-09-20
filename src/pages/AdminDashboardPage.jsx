@@ -7,6 +7,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Video from "../components/Video";
 import arrowDown from "../assets/arrow-down.svg";
+import user from "../assets/user.svg";
 
 const AdminDashboardPage = () => {
   const [fetchedData, setFetchedData] = useState([]);
@@ -67,7 +68,8 @@ const AdminDashboardPage = () => {
   };
 
   const currentTime = () => {
-    return hour + ":" + minutes;
+    const modifiedMin = ("0" + minutes).slice(-2);
+    return hour + ":" + modifiedMin;
   };
   const currentDate = () => {
     return day + " " + month.toString("en-us") + " " + year;
@@ -99,24 +101,25 @@ const AdminDashboardPage = () => {
             APP
           </span>
           <button
-            className="border-0 text-[10px] bg-[#9BFF00] w-[128px] h-[38px] px-6 py-3 rounded-[40px]"
+            className="border-0 text-[10px] bg-[#9BFF00] w-34 h-9 px-6 py-3 rounded-[40px] flex items-center justify-center gap-2"
             onClick={() => logout()}
           >
+            <img src={user} alt="" className=" w-4 h-3" />
             <span>Logout</span>
           </button>
         </div>
 
         <div className="mt-6 md:mt-20 mb-4 block relative">
-          <div className="flex justify-between items-center">
+          <div className="grid sm:flex justify-center sm:justify-between items-center gap-4 sm:gap-0 ">
             <span className="leading-10 text-[40px] text-white font-[100]">
               Today's leaderboard
             </span>
-            <div className="flex justify-center items-center gap-2 bg-[#1D1D1D] px-4 py-2 rounded-[10px]">
+            <div className="flex justify-center items-center gap-2 bg-[#1D1D1D] px-4 py-2 rounded-xl">
               <div className="flex space-x-1 text-white">
                 <span>{currentDate()}</span>
               </div>
               <span className="pb-2 text-white">.</span>
-              <button className="uppercase border-0 text-[10px] bg-[#9BFF00] w-[136px] h-[17px] px-2 py-1 rounded-[40px] flex items-center justify-center">
+              <button className="uppercase border-0 text-[10px] bg-[#9BFF00] w-36 h-7 md:h-4 px-2 py-2 rounded-[40px] flex items-center justify-center">
                 submissions open
               </button>
               <span className="pb-2 text-white">.</span>
